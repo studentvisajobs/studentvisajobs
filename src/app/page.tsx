@@ -153,10 +153,10 @@ export default function HomePage() {
 
   return (
     <main>
-      <section className="mx-auto max-w-6xl px-6 py-16">
-        <div className="grid gap-10 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+      <section className="mx-auto max-w-6xl px-5 py-10 sm:px-6 sm:py-16">
+        <div className="grid gap-8 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
           <div>
-            <div className="inline-flex items-center gap-2 rounded-full border bg-white px-4 py-2 text-sm text-black/70 shadow-sm">
+            <div className="inline-flex max-w-full items-center gap-2 rounded-full border bg-white px-4 py-2 text-sm text-black/70 shadow-sm">
               <span className="h-2 w-2 rounded-full bg-emerald-500" />
               Built for international students and professionals in the UK
             </div>
@@ -165,7 +165,7 @@ export default function HomePage() {
               The UK visa sponsorship platform for international students and professionals
             </h1>
 
-            <p className="mt-5 max-w-2xl text-lg text-black/70">
+            <p className="mt-4 max-w-2xl text-base leading-7 text-black/70 sm:mt-5 sm:text-lg">
               Discover sponsor companies, curated job opportunities, visa guidance,
               and AI tools that help international students and professionals secure
               sponsored UK roles.
@@ -177,18 +177,18 @@ export default function HomePage() {
                 <input
                   type="text"
                   placeholder="Job title, keyword, or company"
-                  className="w-full rounded-xl border px-4 py-3"
+                  className="w-full rounded-xl border bg-white px-4 py-3"
                 />
 
                 <input
                   type="text"
                   placeholder="Location"
-                  className="w-full rounded-xl border px-4 py-3 md:w-64"
+                  className="w-full rounded-xl border bg-white px-4 py-3 md:w-64"
                 />
 
                 <Link
                   href="/jobs"
-                  className="rounded-xl bg-blue-900 px-6 py-3 text-sm font-semibold text-white hover:bg-blue-800"
+                  className="rounded-xl bg-blue-900 px-6 py-3 text-center text-sm font-semibold text-white hover:bg-blue-800"
                 >
                   Search Jobs
                 </Link>
@@ -220,7 +220,7 @@ export default function HomePage() {
             </div>
 
 
-            <div className="mt-8 grid max-w-2xl gap-3 sm:grid-cols-3">
+            <div className="mt-8 grid max-w-2xl gap-3 grid-cols-1 sm:grid-cols-3">
               <div className="rounded-2xl border bg-white p-4 shadow-sm">
                 <p className="text-xs font-semibold uppercase tracking-wide text-black/50">
                   Sponsor database
@@ -244,7 +244,7 @@ export default function HomePage() {
             </div>
           </div>
 
-          <div className="rounded-3xl border bg-white p-6 shadow-xl">
+          <div className="rounded-3xl border bg-white p-5 shadow-xl sm:p-6">
             <p className="text-sm font-semibold uppercase tracking-wide text-blue-900">
               Why candidates use StudentVisaJobs
             </p>

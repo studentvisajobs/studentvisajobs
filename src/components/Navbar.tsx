@@ -68,14 +68,14 @@ export default function Navbar() {
 
   if (loading) {
     return (
-      <div className="flex items-center gap-3">
-        <span className="text-sm text-black/50">Loading...</span>
+      <div className="flex items-center gap-2">
+        <span className="text-xs text-black/50 sm:text-sm">Loading...</span>
       </div>
     );
   }
 
   return (
-    <div className="flex items-center gap-3">
+    <div className="flex items-center gap-2 sm:gap-3">
       {!user && (
         <>
           <Link
@@ -87,7 +87,7 @@ export default function Navbar() {
 
           <Link
             href="/auth"
-            className="rounded-xl bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+            className="rounded-2xl bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 sm:px-4 sm:py-2"
           >
             Employer
           </Link>
@@ -100,19 +100,20 @@ export default function Navbar() {
             href="/student/dashboard"
             className="text-sm font-medium hover:text-blue-900"
           >
-            Dashboard
+            <span className="sm:hidden">Dashboard</span>
+            <span className="hidden sm:inline">Dashboard</span>
           </Link>
 
           <Link
             href="/student/alerts"
-            className="text-sm font-medium hover:text-blue-900"
+            className="hidden text-sm font-medium hover:text-blue-900 sm:inline"
           >
             Alerts
           </Link>
 
           <button
             onClick={signOut}
-            className="rounded-xl border px-3 py-1 text-sm hover:bg-gray-50"
+            className="rounded-2xl border px-3 py-1.5 text-sm hover:bg-gray-50 sm:px-4 sm:py-2"
           >
             Sign out
           </button>
@@ -125,12 +126,13 @@ export default function Navbar() {
             href="/employers"
             className="text-sm font-medium hover:text-blue-900"
           >
-            Employer Dashboard
+            <span className="sm:hidden">Dashboard</span>
+            <span className="hidden sm:inline">Employer Dashboard</span>
           </Link>
 
           <button
             onClick={signOut}
-            className="rounded-xl border px-3 py-1 text-sm hover:bg-gray-50"
+            className="rounded-2xl border px-3 py-1.5 text-sm hover:bg-gray-50 sm:px-4 sm:py-2"
           >
             Sign out
           </button>
@@ -148,7 +150,7 @@ export default function Navbar() {
 
           <button
             onClick={signOut}
-            className="rounded-xl border px-3 py-1 text-sm hover:bg-gray-50"
+            className="rounded-2xl border px-3 py-1.5 text-sm hover:bg-gray-50 sm:px-4 sm:py-2"
           >
             Sign out
           </button>

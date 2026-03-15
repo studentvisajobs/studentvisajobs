@@ -38,9 +38,9 @@ export const metadata: Metadata = {
 function SiteHeader() {
   return (
     <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
-      <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
-        <a href="/" className="flex items-center gap-3">
-          <img src="/logo.svg" alt="StudentVisaJobs" className="h-10 w-auto" />
+      <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
+        <a href="/" className="flex items-center gap-2 sm:gap-3">
+          <img src="/logo.svg" alt="StudentVisaJobs" className="h-9 w-auto sm:h-10" />
         </a>
 
         <div className="hidden items-center gap-6 text-sm font-medium md:flex">
@@ -100,8 +100,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className="min-h-screen bg-gray-50 text-slate-900">
+    <html lang="en" className="bg-white">
+      <body className="min-h-screen bg-white text-slate-900">
         <SiteHeader />
         {children}
         <SiteFooter />
