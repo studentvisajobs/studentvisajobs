@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import { supabase } from "@/lib/supabase/client";
@@ -23,7 +23,7 @@ type Sponsor = {
 
 const PAGE_SIZE = 100;
 
-export default function SponsorsPage() {
+function SponsorsPageContent() {
   const searchParams = useSearchParams();
 
   const [loading, setLoading] = useState(true);
@@ -122,7 +122,9 @@ export default function SponsorsPage() {
     }
 
     if (studentFriendlyFilter === "No") {
-      query = query.or("target_student_friendly.is.null,target_student_friendly.eq.false");
+      query = query.or(
+        "target_student_friendly.is.null,target_student_friendly.eq.false"
+      );
     }
 
     if (openJobsFilter === "Yes") {
@@ -424,5 +426,19 @@ export default function SponsorsPage() {
         </>
       )}
     </main>
+  );
+}
+
+export default function SponsorsPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="mx-auto max-w-6xl px-6 py-12">
+          <p>Loading sponsors...</p>
+        </main>
+      }
+    >
+      <SponsorsPageContent />
+    </Suspense>
   );
 }
