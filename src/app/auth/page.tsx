@@ -1,69 +1,132 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { supabase } from "@/lib/supabase/client";
+import { ensureProfile } from "@/lib/ensureProfile";
+
+type UserRole = "student" | "employer";
 
 export default function AuthPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<"student" | "employer">("student");
+  const [role, setRole] = useState<UserRole>("student");
   const [msg, setMsg] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
   async function signUp() {
     setLoading(true);
-    setMsg(null);
+    setMsg("");
 
-  // 🔎 Validation
-  if (!email || !password) {
-    setMsg("Please enter an email and password.");
-    setLoading(false);
-    return;
-  }
+    if (!email || !password) {
+      setMsg("Please enter an email and password.");
+      setLoading(false);
+      return;
+    }
 
-  if (password.length < 6) {
-    setMsg("Password must be at least 6 characters.");
-    setLoading(false);
-    return;
-  }
+    if (password.length < 6) {
+      setMsg("Password must be at least 6 characters.");
+      setLoading(false);
+      return;
+    }
 
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          data: {
+            role,
+            full_name: "",
+          },
+        },
+      });
 
-    const { error } = await supabase.auth.signUp({
-    email,
-    password,
-  });
+      if (error) {
+        setMsg(error.message);
+        setLoading(false);
+        return;
+      }
 
-  if (error) {
-    setMsg(error.message);
-  } else {
-    setMsg("Check your email to confirm your account.");
-  }
+      if (!data.user) {
+        setMsg("Account created. Check your email to confirm your account.");
+        setLoading(false);
+        return;
+      }
 
-  setLoading(false);
+      await ensureProfile(role);
+
+      setMsg("Account created ✅ Check your email to confirm your account.");
+    } catch (err: any) {
+      console.error("Sign up error:", err);
+      setMsg(err?.message || "Something went wrong creating the account.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function signIn() {
     setLoading(true);
-    setMsg(null);
+    setMsg("");
 
     if (!email || !password) {
-    setMsg("Please enter an email and password.");
-    setLoading(false);
-    return;
-  }
+      setMsg("Please enter an email and password.");
+      setLoading(false);
+      return;
+    }
 
-  const { error } = await supabase.auth.signInWithPassword({
-    email,
-    password,
-  });
+    try {
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-  if (error) {
-    setMsg(error.message);
-  } else {
-    window.location.href = "/employer";
-  }
+      if (error) {
+        setMsg(error.message);
+        setLoading(false);
+        return;
+      }
 
-  setLoading(false);
+      const user = data.user;
+
+      if (!user) {
+        setMsg("Sign in failed.");
+        setLoading(false);
+        return;
+      }
+
+      await ensureProfile();
+
+      const { data: profile, error: profileError } = await supabase
+        .from("profiles")
+        .select("role")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      if (profileError) {
+        setMsg(profileError.message);
+        setLoading(false);
+        return;
+      }
+
+      if (!profile) {
+        setMsg("Signed in, but your profile could not be found.");
+        setLoading(false);
+        return;
+      }
+
+      if (profile.role === "employer") {
+        window.location.href = "/employers";
+        return;
+      }
+
+      window.location.href = "/student/dashboard";
+    } catch (err: any) {
+      console.error("Sign in error:", err);
+      setMsg(err?.message || "Something went wrong signing in.");
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -73,22 +136,28 @@ export default function AuthPage() {
         Students and employers use the same account system.
       </p>
 
-      <div className="mt-6 rounded-2xl border bg-white p-5 shadow-sm space-y-3">
-        <label className="text-sm font-semibold">I am a:</label>
+      <div className="mt-6 space-y-3 rounded-2xl border bg-white p-5 shadow-sm">
+        <label className="text-sm font-semibold">I am signing up as:</label>
+
         <div className="grid grid-cols-2 gap-2">
           <button
             onClick={() => setRole("student")}
             className={`rounded-xl border px-3 py-2 text-sm font-semibold ${
-              role === "student" ? "bg-black text-white" : "bg-white"
+              role === "student"
+                ? "bg-blue-900 text-white"
+                : "bg-white hover:bg-gray-50"
             }`}
             type="button"
           >
             Student
           </button>
+
           <button
             onClick={() => setRole("employer")}
             className={`rounded-xl border px-3 py-2 text-sm font-semibold ${
-              role === "employer" ? "bg-black text-white" : "bg-white"
+              role === "employer"
+                ? "bg-blue-900 text-white"
+                : "bg-white hover:bg-gray-50"
             }`}
             type="button"
           >
@@ -99,9 +168,11 @@ export default function AuthPage() {
         <input
           className="w-full rounded-xl border bg-gray-50 px-4 py-3"
           placeholder="Email"
+          type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
+
         <input
           className="w-full rounded-xl border bg-gray-50 px-4 py-3"
           placeholder="Password"
@@ -117,16 +188,26 @@ export default function AuthPage() {
             className="rounded-xl border px-4 py-3 text-sm font-semibold hover:bg-gray-50 disabled:opacity-50"
             type="button"
           >
-            Sign in
+            {loading ? "Please wait..." : "Sign in"}
           </button>
+
           <button
             onClick={signUp}
             disabled={loading}
-            className="rounded-xl bg-black px-4 py-3 text-sm font-semibold text-white hover:opacity-90 disabled:opacity-50"
+            className="rounded-xl bg-blue-900 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-50"
             type="button"
           >
-            Create account
+            {loading ? "Please wait..." : "Create account"}
           </button>
+        </div>
+
+        <div className="pt-1">
+          <Link
+            href="/auth/forgot-password"
+            className="text-sm font-semibold text-blue-900 hover:text-blue-700"
+          >
+            Forgot password?
+          </Link>
         </div>
 
         {msg && <p className="text-sm text-black/70">{msg}</p>}
