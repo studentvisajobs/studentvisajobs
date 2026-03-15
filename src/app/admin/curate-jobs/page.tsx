@@ -6,7 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 type Sponsor = {
   id: string;
   name: string;
-  website: string | null;
+  website?: string | null;
   location: string | null;
   industry: string | null;
 };
