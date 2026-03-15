@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { getJobPromptContext } from "@/lib/getJobPromptContext";
 
-export default function CvCoverLetterPage() {
+function CvCoverLetterPageContent() {
   const searchParams = useSearchParams();
   const jobId = searchParams.get("jobId");
 
@@ -89,7 +89,7 @@ ${data.company_description || "No additional company description available."}
       }
 
       setResult(data.result || "");
-    } catch (err) {
+    } catch {
       setError("Failed to generate documents.");
     } finally {
       setLoading(false);
@@ -204,5 +204,19 @@ ${data.company_description || "No additional company description available."}
         </section>
       )}
     </main>
+  );
+}
+
+export default function CvCoverLetterPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="mx-auto max-w-5xl px-6 py-12">
+          <p>Loading AI tool...</p>
+        </main>
+      }
+    >
+      <CvCoverLetterPageContent />
+    </Suspense>
   );
 }
