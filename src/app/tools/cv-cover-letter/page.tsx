@@ -2,6 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
+import { supabase } from "@/lib/supabase/client";
 import { getJobPromptContext } from "@/lib/getJobPromptContext";
 
 function CvCoverLetterPageContent() {
@@ -15,10 +16,37 @@ function CvCoverLetterPageContent() {
   const [currentExperience, setCurrentExperience] = useState("");
   const [tone, setTone] = useState("professional");
 
+  const [profileCvUrl, setProfileCvUrl] = useState("");
   const [loading, setLoading] = useState(false);
   const [loadingJob, setLoadingJob] = useState(false);
+  const [loadingProfile, setLoadingProfile] = useState(true);
   const [error, setError] = useState("");
   const [result, setResult] = useState("");
+
+  useEffect(() => {
+    async function loadProfileCv() {
+      setLoadingProfile(true);
+
+      const { data } = await supabase.auth.getUser();
+      const user = data.user;
+
+      if (!user) {
+        setLoadingProfile(false);
+        return;
+      }
+
+      const { data: profile } = await supabase
+        .from("profiles")
+        .select("cv_url")
+        .eq("id", user.id)
+        .maybeSingle();
+
+      setProfileCvUrl(profile?.cv_url ?? "");
+      setLoadingProfile(false);
+    }
+
+    loadProfileCv();
+  }, []);
 
   useEffect(() => {
     async function loadJobContext() {
@@ -64,6 +92,12 @@ ${data.company_description || "No additional company description available."}
     setResult("");
 
     try {
+      const cvSourceText = currentCv.trim()
+        ? currentCv
+        : profileCvUrl
+        ? `Use the student's uploaded CV from this link: ${profileCvUrl}`
+        : "";
+
       const res = await fetch("/api/ai/career-docs", {
         method: "POST",
         headers: {
@@ -73,7 +107,7 @@ ${data.company_description || "No additional company description available."}
           jobTitle,
           companyName,
           jobDescription,
-          currentCv,
+          currentCv: cvSourceText,
           currentExperience,
           tone,
           jobId,
@@ -108,6 +142,20 @@ ${data.company_description || "No additional company description available."}
           {loadingJob
             ? "Loading selected job details..."
             : "Selected job details have been loaded automatically."}
+        </div>
+      )}
+
+      {!loadingProfile && profileCvUrl && (
+        <div className="mt-4 rounded-xl border bg-white p-4 text-sm text-black/70">
+          A CV is already uploaded in your profile.
+          <a
+            href={profileCvUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="ml-2 font-semibold text-blue-900 hover:text-blue-700"
+          >
+            View uploaded CV →
+          </a>
         </div>
       )}
 
@@ -153,12 +201,14 @@ ${data.company_description || "No additional company description available."}
           </div>
 
           <div>
-            <label className="text-sm font-semibold">Current CV</label>
+            <label className="text-sm font-semibold">
+              Current CV (paste text if you want)
+            </label>
             <textarea
               value={currentCv}
               onChange={(e) => setCurrentCv(e.target.value)}
               className="mt-1 min-h-[180px] w-full rounded-xl border px-4 py-3"
-              placeholder="Paste your current CV text here..."
+              placeholder="Paste your current CV text here, or leave blank to use your uploaded profile CV."
             />
           </div>
 
@@ -187,7 +237,7 @@ ${data.company_description || "No additional company description available."}
           </div>
 
           <button
-            disabled={loading || loadingJob}
+            disabled={loading || loadingJob || loadingProfile}
             className="mt-2 w-fit rounded-xl bg-black px-6 py-3 font-semibold text-white disabled:opacity-50"
           >
             {loading ? "Generating..." : "Generate documents"}
