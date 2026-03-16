@@ -12,6 +12,7 @@ export default function Navbar() {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>(null);
   const [role, setRole] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     loadUser();
@@ -66,6 +67,10 @@ export default function Navbar() {
     window.location.href = "/";
   }
 
+  function closeMenu() {
+    setMenuOpen(false);
+  }
+
   if (loading) {
     return (
       <div className="flex items-center gap-2">
@@ -75,24 +80,33 @@ export default function Navbar() {
   }
 
   return (
-    <div className="flex items-center gap-2 sm:gap-3">
-      {!user && (
-  <>
-    <Link
-      href="/auth"
-      className="hidden text-sm font-medium hover:text-blue-900 sm:inline"
-    >
-      Sign in
-    </Link>
+    <div className="relative flex items-center gap-2 sm:gap-3">
+      <button
+        type="button"
+        onClick={() => setMenuOpen((prev) => !prev)}
+        className="rounded-xl border px-3 py-2 text-sm font-semibold hover:bg-gray-50 md:hidden"
+        aria-label="Toggle menu"
+      >
+        ☰
+      </button>
 
-    <Link
-      href="/auth"
-      className="rounded-xl bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
-    >
-      Sign up
-    </Link>
-  </>
-)}
+      {!user && (
+        <>
+          <Link
+            href="/auth"
+            className="hidden text-sm font-medium hover:text-blue-900 sm:inline"
+          >
+            Sign in
+          </Link>
+
+          <Link
+            href="/auth"
+            className="rounded-2xl bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+          >
+            Sign up
+          </Link>
+        </>
+      )}
 
       {user && role === "student" && (
         <>
@@ -155,6 +169,84 @@ export default function Navbar() {
             Sign out
           </button>
         </>
+      )}
+
+      {menuOpen && (
+        <div className="absolute right-0 top-14 z-50 w-64 rounded-2xl border bg-white p-3 shadow-xl md:hidden">
+          <div className="flex flex-col gap-1">
+            <Link
+              href="/jobs"
+              onClick={closeMenu}
+              className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Jobs
+            </Link>
+
+            <Link
+              href="/sponsors"
+              onClick={closeMenu}
+              className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Sponsors
+            </Link>
+
+            <Link
+              href="/sponsors/top"
+              onClick={closeMenu}
+              className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Top Sponsors
+            </Link>
+
+            <Link
+              href="/visa-hub"
+              onClick={closeMenu}
+              className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Visa Hub
+            </Link>
+
+            <Link
+              href="/tools"
+              onClick={closeMenu}
+              className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Career Tools
+            </Link>
+
+            <div className="my-2 border-t" />
+
+            {!user && (
+              <Link
+                href="/auth"
+                onClick={closeMenu}
+                className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+              >
+                Sign in
+              </Link>
+            )}
+
+            {user && role === "student" && (
+              <Link
+                href="/student/alerts"
+                onClick={closeMenu}
+                className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+              >
+                Alerts
+              </Link>
+            )}
+
+            {user && role === "employer" && (
+              <Link
+                href="/employers"
+                onClick={closeMenu}
+                className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+              >
+                Employer Dashboard
+              </Link>
+            )}
+          </div>
+        </div>
       )}
     </div>
   );
