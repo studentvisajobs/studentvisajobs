@@ -92,12 +92,6 @@ ${data.company_description || "No additional company description available."}
     setResult("");
 
     try {
-      const cvSourceText = currentCv.trim()
-        ? currentCv
-        : profileCvUrl
-        ? `Use the student's uploaded CV from this link: ${profileCvUrl}`
-        : "";
-
       const res = await fetch("/api/ai/career-docs", {
         method: "POST",
         headers: {
@@ -107,10 +101,11 @@ ${data.company_description || "No additional company description available."}
           jobTitle,
           companyName,
           jobDescription,
-          currentCv: cvSourceText,
+          currentCv: currentCv.trim(),
           currentExperience,
           tone,
           jobId,
+          profileCvUrl,
         }),
       });
 
@@ -147,12 +142,16 @@ ${data.company_description || "No additional company description available."}
 
       {!loadingProfile && profileCvUrl && (
         <div className="mt-4 rounded-xl border bg-white p-4 text-sm text-black/70">
-          A CV is already uploaded in your profile.
+          <p className="font-semibold text-black">Profile CV available</p>
+          <p className="mt-1">
+            If you leave the CV text box empty, the AI tool will use your uploaded
+            profile CV as supporting context.
+          </p>
           <a
             href={profileCvUrl}
             target="_blank"
             rel="noreferrer"
-            className="ml-2 font-semibold text-blue-900 hover:text-blue-700"
+            className="mt-2 inline-block font-semibold text-blue-900 hover:text-blue-700"
           >
             View uploaded CV →
           </a>
@@ -208,7 +207,7 @@ ${data.company_description || "No additional company description available."}
               value={currentCv}
               onChange={(e) => setCurrentCv(e.target.value)}
               className="mt-1 min-h-[180px] w-full rounded-xl border px-4 py-3"
-              placeholder="Paste your current CV text here, or leave blank to use your uploaded profile CV."
+              placeholder="Paste your current CV text here. If left blank, your uploaded profile CV will be used as supporting context."
             />
           </div>
 
