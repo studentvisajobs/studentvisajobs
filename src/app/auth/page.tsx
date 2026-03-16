@@ -6,8 +6,10 @@ import { supabase } from "@/lib/supabase/client";
 import { ensureProfile } from "@/lib/ensureProfile";
 
 type UserRole = "student" | "employer";
+type AuthMode = "signin" | "signup";
 
 export default function AuthPage() {
+  const [mode, setMode] = useState<AuthMode>("signin");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState<UserRole>("student");
@@ -130,87 +132,170 @@ export default function AuthPage() {
   }
 
   return (
-    <main className="mx-auto max-w-md px-6 py-12">
-      <h1 className="text-3xl font-bold">Sign in</h1>
-      <p className="mt-2 text-black/70">
-        Students and employers use the same account system.
-      </p>
-
-      <div className="mt-6 space-y-3 rounded-2xl border bg-white p-5 shadow-sm">
-        <label className="text-sm font-semibold">I am signing up as:</label>
-
-        <div className="grid grid-cols-2 gap-2">
+    <main className="mx-auto max-w-md px-5 py-10 sm:px-6 sm:py-12">
+      <div className="rounded-3xl border bg-white p-6 shadow-sm sm:p-8">
+        <div className="grid grid-cols-2 gap-2 rounded-2xl bg-gray-100 p-1">
           <button
-            onClick={() => setRole("student")}
-            className={`rounded-xl border px-3 py-2 text-sm font-semibold ${
-              role === "student"
-                ? "bg-blue-900 text-white"
-                : "bg-white hover:bg-gray-50"
+            type="button"
+            onClick={() => {
+              setMode("signin");
+              setMsg("");
+            }}
+            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+              mode === "signin"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-black/65 hover:text-slate-900"
             }`}
-            type="button"
           >
-            Student
+            Sign in
           </button>
 
           <button
-            onClick={() => setRole("employer")}
-            className={`rounded-xl border px-3 py-2 text-sm font-semibold ${
-              role === "employer"
-                ? "bg-blue-900 text-white"
-                : "bg-white hover:bg-gray-50"
+            type="button"
+            onClick={() => {
+              setMode("signup");
+              setMsg("");
+            }}
+            className={`rounded-xl px-4 py-2 text-sm font-semibold transition ${
+              mode === "signup"
+                ? "bg-white text-slate-900 shadow-sm"
+                : "text-black/65 hover:text-slate-900"
             }`}
-            type="button"
           >
-            Employer
+            Create account
           </button>
         </div>
 
-        <input
-          className="w-full rounded-xl border bg-gray-50 px-4 py-3"
-          placeholder="Email"
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-        />
+        <div className="mt-6">
+          <h1 className="text-3xl font-bold">
+            {mode === "signin" ? "Welcome back" : "Create your account"}
+          </h1>
 
-        <input
-          className="w-full rounded-xl border bg-gray-50 px-4 py-3"
-          placeholder="Password"
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
-
-        <div className="grid grid-cols-2 gap-2 pt-2">
-          <button
-            onClick={signIn}
-            disabled={loading}
-            className="rounded-xl border px-4 py-3 text-sm font-semibold hover:bg-gray-50 disabled:opacity-50"
-            type="button"
-          >
-            {loading ? "Please wait..." : "Sign in"}
-          </button>
-
-          <button
-            onClick={signUp}
-            disabled={loading}
-            className="rounded-xl bg-blue-900 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-50"
-            type="button"
-          >
-            {loading ? "Please wait..." : "Create account"}
-          </button>
+          <p className="mt-2 text-black/70">
+            {mode === "signin"
+              ? "Sign in to access your dashboard, jobs, alerts, and application tools."
+              : "Create an account to explore visa sponsorship jobs, sponsor companies, and AI career tools."}
+          </p>
         </div>
 
-        <div className="pt-1">
-          <Link
-            href="/auth/forgot-password"
-            className="text-sm font-semibold text-blue-900 hover:text-blue-700"
-          >
-            Forgot password?
-          </Link>
-        </div>
+        {mode === "signup" && (
+          <div className="mt-6 space-y-3 rounded-2xl border bg-gray-50 p-4">
+            <label className="text-sm font-semibold">I am creating an account as:</label>
 
-        {msg && <p className="text-sm text-black/70">{msg}</p>}
+            <div className="grid grid-cols-2 gap-2">
+              <button
+                onClick={() => setRole("student")}
+                className={`rounded-xl border px-3 py-2 text-sm font-semibold ${
+                  role === "student"
+                    ? "bg-blue-900 text-white"
+                    : "bg-white hover:bg-gray-50"
+                }`}
+                type="button"
+              >
+                Student
+              </button>
+
+              <button
+                onClick={() => setRole("employer")}
+                className={`rounded-xl border px-3 py-2 text-sm font-semibold ${
+                  role === "employer"
+                    ? "bg-blue-900 text-white"
+                    : "bg-white hover:bg-gray-50"
+                }`}
+                type="button"
+              >
+                Employer
+              </button>
+            </div>
+
+            <p className="text-xs text-black/60">
+              Students can track applications and use AI tools. Employers can create a company profile and post jobs.
+            </p>
+          </div>
+        )}
+
+        <div className="mt-6 grid gap-4">
+          <div>
+            <label className="text-sm font-semibold">Email</label>
+            <input
+              className="mt-2 w-full rounded-xl border bg-gray-50 px-4 py-3"
+              placeholder="you@example.com"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="text-sm font-semibold">Password</label>
+            <input
+              className="mt-2 w-full rounded-xl border bg-gray-50 px-4 py-3"
+              placeholder="Password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          {mode === "signin" ? (
+            <button
+              onClick={signIn}
+              disabled={loading}
+              className="rounded-xl bg-blue-900 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-50"
+              type="button"
+            >
+              {loading ? "Please wait..." : "Sign in"}
+            </button>
+          ) : (
+            <button
+              onClick={signUp}
+              disabled={loading}
+              className="rounded-xl bg-blue-900 px-4 py-3 text-sm font-semibold text-white hover:bg-blue-800 disabled:opacity-50"
+              type="button"
+            >
+              {loading ? "Please wait..." : "Create account"}
+            </button>
+          )}
+
+          <div className="flex items-center justify-between gap-3 text-sm">
+            <Link
+              href="/auth/forgot-password"
+              className="font-semibold text-blue-900 hover:text-blue-700"
+            >
+              Forgot password?
+            </Link>
+
+            {mode === "signin" ? (
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("signup");
+                  setMsg("");
+                }}
+                className="text-black/70 hover:text-slate-900"
+              >
+                New here? Create account
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("signin");
+                  setMsg("");
+                }}
+                className="text-black/70 hover:text-slate-900"
+              >
+                Already have an account? Sign in
+              </button>
+            )}
+          </div>
+
+          {msg && (
+            <div className="rounded-xl border bg-gray-50 p-3 text-sm text-black/75">
+              {msg}
+            </div>
+          )}
+        </div>
       </div>
     </main>
   );
