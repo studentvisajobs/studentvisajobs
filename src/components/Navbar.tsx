@@ -77,22 +77,22 @@ export default function Navbar() {
   return (
     <div className="flex items-center gap-2 sm:gap-3">
       {!user && (
-        <>
-          <Link
-            href="/auth"
-            className="hidden text-sm font-medium hover:text-blue-900 sm:inline"
-          >
-            Sign in
-          </Link>
+  <>
+    <Link
+      href="/auth"
+      className="hidden text-sm font-medium hover:text-blue-900 sm:inline"
+    >
+      Sign in
+    </Link>
 
-          <Link
-            href="/auth"
-            className="rounded-2xl bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800 sm:px-4 sm:py-2"
-          >
-            Employer
-          </Link>
-        </>
-      )}
+    <Link
+      href="/auth"
+      className="rounded-xl bg-blue-900 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-800"
+    >
+      Sign up
+    </Link>
+  </>
+)}
 
       {user && role === "student" && (
         <>
