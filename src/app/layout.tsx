@@ -2,13 +2,16 @@ import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
 import "./globals.css";
 
+
+import type { Metadata } from "next";
+
 export const metadata: Metadata = {
   title: {
     default: "StudentVisaJobs",
     template: "%s | StudentVisaJobs",
   },
   description:
-    "StudentVisaJobs helps international students and professionals find UK visa sponsorship jobs, discover sponsor companies, and generate tailored CVs and cover letters with AI.",
+    "Find UK visa sponsorship jobs, discover sponsor companies, and generate tailored CVs and cover letters with AI.",
   keywords: [
     "UK visa sponsorship jobs",
     "Skilled Worker sponsorship jobs",
@@ -18,20 +21,35 @@ export const metadata: Metadata = {
     "AI CV generator",
     "AI cover letter generator",
   ],
-  metadataBase: new URL("https://studentvisajobs.co.uk"),
+
+  // ✅ FIXED DOMAIN
+  metadataBase: new URL("https://studentvisajobs.com"),
+
   openGraph: {
     title: "StudentVisaJobs",
     description:
       "Find UK visa sponsorship jobs, discover sponsor companies, and generate tailored CVs and cover letters with AI.",
-    url: "https://studentvisajobs.co.uk",
+    url: "https://studentvisajobs.com",
     siteName: "StudentVisaJobs",
+
+    // 🔥 THIS IS THE MAIN FIX FOR YOUR IMAGE
+    images: [
+      {
+        url: "https://studentvisajobs.com/og-image.png",
+        width: 1200,
+        height: 630,
+      },
+    ],
+
     type: "website",
   },
+
   twitter: {
     card: "summary_large_image",
     title: "StudentVisaJobs",
     description:
       "Find UK visa sponsorship jobs, discover sponsor companies, and generate tailored CVs and cover letters with AI.",
+    images: ["https://studentvisajobs.com/og-image.png"],
   },
 };
 
