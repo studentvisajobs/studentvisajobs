@@ -4,6 +4,11 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://studentvisajobs.com"),
+
+verification: {
+  google: "UYtOWiIKJrS9ggrmcX4zcp_qrPpP6zGfYln2IfhkHCs",
+},
+
   title: {
     default: "StudentVisaJobs",
     template: "%s | StudentVisaJobs",
