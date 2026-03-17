@@ -2,8 +2,8 @@ import Navbar from "@/components/Navbar";
 import type { Metadata } from "next";
 import "./globals.css";
 
-
 export const metadata: Metadata = {
+  metadataBase: new URL("https://studentvisajobs.com"),
   title: {
     default: "StudentVisaJobs",
     template: "%s | StudentVisaJobs",
@@ -19,35 +19,37 @@ export const metadata: Metadata = {
     "AI CV generator",
     "AI cover letter generator",
   ],
-
-  // ✅ FIXED DOMAIN
-  metadataBase: new URL("https://studentvisajobs.com"),
-
+  alternates: {
+    canonical: "/",
+  },
   openGraph: {
     title: "StudentVisaJobs",
     description:
       "Find UK visa sponsorship jobs, discover sponsor companies, and generate tailored CVs and cover letters with AI.",
     url: "https://studentvisajobs.com",
     siteName: "StudentVisaJobs",
-
-    // 🔥 THIS IS THE MAIN FIX FOR YOUR IMAGE
     images: [
       {
-        url: "https://studentvisajobs.com/og-image.png",
+        url: "/og-image.png",
         width: 1200,
         height: 630,
+        alt: "StudentVisaJobs",
       },
     ],
-
+    locale: "en_GB",
     type: "website",
   },
-
   twitter: {
     card: "summary_large_image",
     title: "StudentVisaJobs",
     description:
       "Find UK visa sponsorship jobs, discover sponsor companies, and generate tailored CVs and cover letters with AI.",
-    images: ["https://studentvisajobs.com/og-image.png"],
+    images: ["/og-image.png"],
+  },
+  icons: {
+    icon: "/favicon.svg",
+    shortcut: "/favicon.svg",
+    apple: "/favicon.svg",
   },
 };
 
@@ -56,7 +58,11 @@ function SiteHeader() {
     <header className="sticky top-0 z-50 border-b bg-white/90 backdrop-blur">
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-4 py-4 sm:px-6">
         <a href="/" className="flex items-center gap-2 sm:gap-3">
-          <img src="/logo.svg" alt="StudentVisaJobs" className="h-9 w-auto sm:h-10" />
+          <img
+            src="/logo.svg"
+            alt="StudentVisaJobs"
+            className="h-9 w-auto sm:h-10"
+          />
         </a>
 
         <div className="hidden items-center gap-6 text-sm font-medium md:flex">
