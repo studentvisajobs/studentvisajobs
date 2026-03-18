@@ -164,13 +164,13 @@ export default function HomePage() {
             </div>
 
             <h1 className="mt-6 max-w-4xl text-3xl font-bold leading-tight text-slate-900 sm:text-4xl lg:text-5xl">
-              The UK visa sponsorship platform for international students and professionals
+              The UK visa sponsorship and part-time job platform for international students and professionals
             </h1>
 
             <p className="mt-4 max-w-2xl text-base leading-7 text-black/70 sm:text-lg">
-              Discover sponsor companies, curated job opportunities, visa guidance,
-              and AI tools that help international students and professionals secure
-              sponsored UK roles.
+              Discover sponsor companies, part-time and full-time job opportunities,
+              visa guidance, and AI tools that help international students and professionals
+              secure UK roles.
             </p>
 
             <div className="mt-8 flex flex-col gap-3 md:flex-row">
