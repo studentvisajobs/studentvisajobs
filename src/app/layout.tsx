@@ -70,23 +70,26 @@ function SiteHeader() {
           />
         </a>
 
-        <div className="hidden items-center gap-6 text-sm font-medium md:flex">
-          <a className="hover:text-blue-900" href="/jobs">
-            Jobs
-          </a>
-          <a className="hover:text-blue-900" href="/sponsors">
-            Sponsors
-          </a>
-          <a className="hover:text-blue-900" href="/sponsors/top">
-            Top Sponsors
-          </a>
-          <a className="hover:text-blue-900" href="/visa-hub">
-            Visa Hub
-          </a>
-          <a className="hover:text-blue-900" href="/tools">
-            Career Tools
-          </a>
-        </div>
+<div className="hidden items-center gap-6 text-sm font-medium md:flex">
+  <a className="hover:text-blue-900" href="/jobs">
+    Jobs
+  </a>
+  <a className="hover:text-blue-900" href="/jobs/part-time">
+    Part-time Jobs
+  </a>
+  <a className="hover:text-blue-900" href="/sponsors">
+    Sponsors
+  </a>
+  <a className="hover:text-blue-900" href="/sponsors/top">
+    Top Sponsors
+  </a>
+  <a className="hover:text-blue-900" href="/visa-hub">
+    Visa Hub
+  </a>
+  <a className="hover:text-blue-900" href="/tools">
+    Career Tools
+  </a>
+</div>
 
         <Navbar />
       </nav>

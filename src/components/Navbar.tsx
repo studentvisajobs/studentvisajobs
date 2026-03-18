@@ -183,6 +183,14 @@ export default function Navbar() {
             </Link>
 
             <Link
+              href="/jobs/part-time"
+              onClick={closeMenu}
+              className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
+            >
+              Part-time Jobs
+            </Link>
+
+            <Link
               href="/sponsors"
               onClick={closeMenu}
               className="rounded-xl px-3 py-2 text-sm font-medium hover:bg-gray-50"
